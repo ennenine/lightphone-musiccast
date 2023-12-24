@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  php:
+    image: php:apache
+    ports:
+      - 8585:80
+    volumes:
+      - ./php:/var/www/html/ # Don't change these
+      - /mnt/media/Music:/media/Music # location of music library : make sure mount point matches Jellyfi
+n's mount point
+      - ../jellyfin/config/data/playlists:/playlists # Relative path to your Jellyfin playlists : don't c
+hange right side
