@@ -11,7 +11,7 @@ $baseurl = "https://yourdomain.com/";
 $publish_date = date_format( date_create('1980-01-01'), 'D, d M Y H:i:s O' ); 
 
 // Location of playlists as mapped in docker container, including trailing slash
-$playlist_root = '/var/playlists/';
+$playlist_root = '/playlists/';
 
 // Full path for media mount, including trailing slash. 
 // Be sure this matches what Jellyfin's docker and this docker have set.
