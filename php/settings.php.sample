@@ -17,8 +17,6 @@ $playlist_root = '/playlists/';
 // Be sure this matches what Jellyfin's docker and this docker have set.
 $media_root = '/media/Music/';
 
-// If you want your playlist randomized (every time Light Phone refreshes the podcast feed)
-$randomize = true;
 
 // END CONFIG
 // ------------------------------------------------------------------------
