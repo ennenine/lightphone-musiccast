@@ -168,7 +168,7 @@ function processPlaylist($playlist_name, $randomize) {
 		// Item Enclosure
 		$enclosure_node = $dom->createElement("enclosure");
 		$enclosure_node->setAttributeNode(
-			new DOMAttr('url', $baseurl . "song.php?q=" . urlencode($item['Path'])));
+			new DOMAttr('url', $baseurl . "?song=" . urlencode($item['Path'])));
 		$enclosure_node->setAttributeNode( new DOMAttr('type', 'audio/mpeg') ); 
 			$item_node->appendChild($enclosure_node);
 
@@ -187,10 +187,10 @@ function processPlaylist($playlist_name, $randomize) {
 
 
 
-function streamSong($song) {
+function streamSong($file) {
 	// Mostly taken from https://github.com/tuxxin/MP4Streaming
 
-	if(!file_exists($song)) {
+	if(!file_exists($file)) {
 	  echo "no file";
 	  exit;
 	}
