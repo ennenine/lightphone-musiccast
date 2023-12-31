@@ -124,6 +124,9 @@ function processPlaylist($playlist_name, $randomize, $validate) {
     if($randomize) {
 		shuffle($playlist_items);
     }
+    else {
+    	$playlist_items = array_reverse($playlist_items);
+    }
 
     if($validate) {
     	echo "<h1>Playlist: " . $objXmlDocument->LocalTitle . "</h1>";
