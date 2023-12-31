@@ -35,6 +35,10 @@ if(isset($_GET['playlist'])) {
 	listPlaylists();
 }
 
+function formatDateForRSS($date) {
+  return date_format( $date, 'D, d M Y H:i:s O' );
+}
+
 
 function listPlaylists() {
 	global $baseurl, $playlist_root;
@@ -125,6 +129,14 @@ function processPlaylist($playlist_name) {
 			mt_rand(0, 65535),
 			mt_rand(0, 65535));
 
+
+        // Last Build Date
+		$last_build_node = $dom->createElement('lastBuildDate');
+		$last_build_node->appendChild(
+	 	$dom->createTextNode( formatDateForRSS( date_create('now') ) ) );
+        $channel_node->appendChild($last_build_node);
+
+
         // Item	
         $item_node = $dom->createElement("item");
         $channel_node->appendChild($item_node);
@@ -137,7 +149,7 @@ function processPlaylist($playlist_name) {
 
 		// Item Publish Date
 		$pub_node = $dom->createElement('pubDate');
-			$pub_node->appendChild( $dom->createTextNode( $publish_date ) );
+		$pub_node->appendChild( $dom->createTextNode( formatDateForRSS($publish_date) ) );
 		$item_node->appendChild( $pub_node ); 
 
 		// Item GUID
@@ -159,6 +171,7 @@ function processPlaylist($playlist_name) {
 			$item_node->appendChild($enclosure_node);
 
 		$iteration_count++;
+		$publish_date = date_add($publish_date,date_interval_create_from_date_string("1 day"));
 	}
 
     $root->appendChild($channel_node);
