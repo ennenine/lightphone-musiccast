@@ -94,6 +94,11 @@ function processPlaylist($playlist_name) {
     $title_node->appendChild( $dom->createTextNode($objXmlDocument->LocalTitle) );
     $channel_node->appendChild($title_node);
 
+    // Channel Author
+    $author_node = $dom->createElement('itunes:author');
+    $author_node->appendChild( $dom->createTextNode('Jellyfin') );
+    $channel_node->appendChild( $author_node );
+
     // Channel Owner
     $owner_node = $dom->createElement('itunes:owner');
     $owner_name_node = $dom->createElement('itunes:name');
