@@ -5,7 +5,8 @@ include 'settings.php';
 	
 if(isset($_GET['playlist'])) {
 	$playlist = urldecode($_GET['playlist']);
-	processPlaylist($playlist);
+	$randomize = urldecode($_GET['randomize']) === "true";
+	processPlaylist($playlist, $randomize);
 	
 } elseif (isset($_GET['song'])) {
 	$song = urldecode($_GET['song']);
@@ -15,33 +16,49 @@ if(isset($_GET['playlist'])) {
 	listPlaylists();
 }
 
+
+
+
 function formatDateForRSS($date) {
   return date_format( $date, 'D, d M Y H:i:s O' );
 }
 
 
+
+
 function listPlaylists() {
 	global $baseurl, $playlist_root;
 	
-	echo "Jellyfin Playlists";
+	echo "<h1>Jellyfin Playlists</h1>";
 	
 	$playlists = array_diff(scandir($playlist_root), array('..', '.'));
 
-	$link_format = "<a href='%s'>%s</a>";
+	$link_format = "<a href='%s'>feed</a>";
 	
-	echo "<ul>";
+	echo "<table>";
+	echo "<thead>";
+	echo "<td>Playlist</td>";
+	echo "<td>Ordered</td>";
+	echo "<td>Randomized</td>";
+	echo "</thead>";
 	foreach($playlists as $playlist) {
-		$url = $baseurl . "?playlist=" . $playlist;
-		echo "<li>" . sprintf($link_format, $url, $playlist) . "</li>";
+		$url_plain = $baseurl . "?playlist=" . $playlist . "&randomize=false";
+		$url_randomize = $baseurl . "?playlist=" . $playlist . "&randomize=true";
+
+		echo "<tr>";
+		echo "<td>" . $playlist . "</td>";
+		echo "<td>" . sprintf($link_format, $url_plain) . "</td>";
+		echo "<td>" . sprintf($link_format, $url_randomize) . "</td>";
+		echo "</tr>";
 	}
-	echo "</ul>";
+	echo "</table>";
 }
 
 
 
 
-function processPlaylist($playlist_name) {
-	global $playlist_root, $randomize, $media_root, $publish_date, $baseurl;
+function processPlaylist($playlist_name, $randomize) {
+	global $playlist_root, $media_root, $publish_date, $baseurl;
 	
 	$playlist = $playlist_root . $playlist_name . '/playlist.xml';
 
