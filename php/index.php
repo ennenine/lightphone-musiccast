@@ -47,9 +47,9 @@ function listPlaylists() {
 	echo "<td>Validate</td>";
 	echo "</thead>";
 	foreach($playlists as $playlist) {
-		$url_plain = $baseurl . "?playlist=" . $playlist . "&randomize=false";
-		$url_randomize = $baseurl . "?playlist=" . $playlist . "&randomize=true";
-		$url_validate = $baseurl . "?validate=" . $playlist;
+		$url_plain = $baseurl . "?playlist=" . urlencode($playlist) . "&randomize=false";
+		$url_randomize = $baseurl . "?playlist=" . urlencode($playlist) . "&randomize=true";
+		$url_validate = $baseurl . "?validate=" . urlencode($playlist);
 
 		echo "<tr>";
 		echo "<td>" . $playlist . "</td>";
