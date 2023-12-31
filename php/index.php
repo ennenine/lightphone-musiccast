@@ -14,9 +14,11 @@ if(isset($_GET['playlist'])) {
 
 } elseif (isset($_GET['validate'])) {
 	$playlist = urldecode($_GET['validate']);
+	outputHtml();
 	processPlaylist($playlist, false, true);
 	
 } else {
+	outputHtml();
 	listPlaylists();
 }
 
@@ -29,6 +31,12 @@ function formatDateForRSS($date) {
 
 
 
+function outputHtml(){
+	echo "<html><head><link rel='stylesheet' href='styles.css'></head><body>";
+}
+
+
+
 
 function listPlaylists() {
 	global $baseurl, $playlist_root;
@@ -37,14 +45,14 @@ function listPlaylists() {
 	
 	$playlists = array_diff(scandir($playlist_root), array('..', '.'));
 
-	$link_format = "<a href='%s'>🔗</a>";
+	$link_format = "<a href='%s'>%s</a>";
 	
 	echo "<table>";
 	echo "<thead>";
 	echo "<td>Playlist</td>";
-	echo "<td>Ordered</td>";
-	echo "<td>Randomized</td>";
-	echo "<td>Validate</td>";
+	echo "<td class='link_col'>Ordered</td>";
+	echo "<td class='link_col'>Randomized</td>";
+	echo "<td class='link_col'>Validate</td>";
 	echo "</thead>";
 	foreach($playlists as $playlist) {
 		$url_plain = $baseurl . "?playlist=" . urlencode($playlist) . "&randomize=false";
@@ -53,9 +61,9 @@ function listPlaylists() {
 
 		echo "<tr>";
 		echo "<td>" . $playlist . "</td>";
-		echo "<td>" . sprintf($link_format, $url_plain) . "</td>";
-		echo "<td>" . sprintf($link_format, $url_randomize) . "</td>";
-		echo "<td>" . sprintf($link_format, $url_validate) . "</td>";
+		echo "<td class='link_col'>" . sprintf($link_format, $url_plain, "⬇️") . "</td>";
+		echo "<td class='link_col'>" . sprintf($link_format, $url_randomize, "🔀") . "</td>";
+		echo "<td class='link_col'>" . sprintf($link_format, $url_validate, "🤖") . "</td>";
 		echo "</tr>";
 	}
 	echo "</table>";
@@ -118,6 +126,7 @@ function processPlaylist($playlist_name, $randomize, $validate) {
     }
 
     if($validate) {
+    	echo "<h1>Playlist: " . $objXmlDocument->LocalTitle . "</h1>";
     	echo "<pre>";
     }
 

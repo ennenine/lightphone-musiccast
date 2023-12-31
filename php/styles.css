@@ -1,0 +1,29 @@
+body {
+	background-color: #000000;
+	color: #ffffff;
+	font-family: sans-serif;
+	font-size: 1.2em;
+}
+
+table, td {
+	border-spacing: 0px;
+	padding: 3px;
+}
+
+thead td{
+	background-color: #000000;
+	font-weight: bold;
+}
+
+tr:nth-child(odd) {
+    background-color: #232323;
+}
+
+td.link_col {
+	width: 100px;
+	text-align: center;
+}
+
+pre {
+	line-height: 2em;
+}
