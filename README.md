@@ -10,6 +10,6 @@ Assumptions
 Setup
 
 1. Customise the ports and volumes in the docker-compose.yml file
-2. Customize the configuration variables at the top of the php/index.php file
+2. Customize the configuration variables in settings.php
 3. Run docker-compose up -d to start the container
 4. Visit the configured web address to see a list of your playlists as podcast feeds to enter into LightPhone dashboard 
