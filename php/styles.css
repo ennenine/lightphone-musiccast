@@ -13,6 +13,7 @@ table, td {
 thead td{
 	background-color: #000000;
 	font-weight: bold;
+	font-size: 1.1em;
 }
 
 tr:nth-child(odd) {
