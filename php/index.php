@@ -6,11 +6,15 @@ include 'settings.php';
 if(isset($_GET['playlist'])) {
 	$playlist = urldecode($_GET['playlist']);
 	$randomize = urldecode($_GET['randomize']) === "true";
-	processPlaylist($playlist, $randomize);
+	processPlaylist($playlist, $randomize, false);
 	
 } elseif (isset($_GET['song'])) {
 	$song = urldecode($_GET['song']);
 	streamSong($song);
+
+} elseif (isset($_GET['validate'])) {
+	$playlist = urldecode($_GET['validate']);
+	processPlaylist($playlist, false, true);
 	
 } else {
 	listPlaylists();
@@ -33,22 +37,25 @@ function listPlaylists() {
 	
 	$playlists = array_diff(scandir($playlist_root), array('..', '.'));
 
-	$link_format = "<a href='%s'>feed</a>";
+	$link_format = "<a href='%s'>🔗</a>";
 	
 	echo "<table>";
 	echo "<thead>";
 	echo "<td>Playlist</td>";
 	echo "<td>Ordered</td>";
 	echo "<td>Randomized</td>";
+	echo "<td>Validate</td>";
 	echo "</thead>";
 	foreach($playlists as $playlist) {
 		$url_plain = $baseurl . "?playlist=" . $playlist . "&randomize=false";
 		$url_randomize = $baseurl . "?playlist=" . $playlist . "&randomize=true";
+		$url_validate = $baseurl . "?validate=" . $playlist;
 
 		echo "<tr>";
 		echo "<td>" . $playlist . "</td>";
 		echo "<td>" . sprintf($link_format, $url_plain) . "</td>";
 		echo "<td>" . sprintf($link_format, $url_randomize) . "</td>";
+		echo "<td>" . sprintf($link_format, $url_validate) . "</td>";
 		echo "</tr>";
 	}
 	echo "</table>";
@@ -57,7 +64,7 @@ function listPlaylists() {
 
 
 
-function processPlaylist($playlist_name, $randomize) {
+function processPlaylist($playlist_name, $randomize, $validate) {
 	global $playlist_root, $media_root, $publish_date, $baseurl;
 	
 	$playlist = $playlist_root . $playlist_name . '/playlist.xml';
@@ -110,6 +117,10 @@ function processPlaylist($playlist_name, $randomize) {
 		shuffle($playlist_items);
     }
 
+    if($validate) {
+    	echo "<pre>";
+    }
+
 	foreach($playlist_items as $item) {
 
 		$rel_path = str_replace( $media_root, '', $item['Path'] );
@@ -133,8 +144,8 @@ function processPlaylist($playlist_name, $randomize) {
 
 
         // Last Build Date
-	$last_build_node = $dom->createElement('lastBuildDate');
-	$last_build_node->appendChild(
+		$last_build_node = $dom->createElement('lastBuildDate');
+		$last_build_node->appendChild(
 	 	$dom->createTextNode( formatDateForRSS( date_create('now') ) ) );
         $channel_node->appendChild($last_build_node);
 
@@ -174,14 +185,29 @@ function processPlaylist($playlist_name, $randomize) {
 
 		$iteration_count++;
 		$publish_date = date_add($publish_date,date_interval_create_from_date_string("1 day"));
+
+		if($validate) {
+			$row_format;
+
+			if(!file_exists($item['Path'])) {
+				$row_format = "❌ <strong style='color: #ff0000;'>%s</strong>\n";
+			}
+			else {
+				$row_format = "✅ %s\n";
+			}
+
+			echo sprintf($row_format, $item['Path']) ;
+		}
 	}
 
     $root->appendChild($channel_node);
 	$dom->appendChild($root);
 
-	Header('Content-type: text/xml');
-	print $dom->saveXML();
 
+	if(!$validate) {
+		Header('Content-type: text/xml');
+		print $dom->saveXML();
+	}
 }
 
 
